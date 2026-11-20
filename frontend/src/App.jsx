@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
+
 import { getToken } from './api';
 import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
@@ -9,8 +10,10 @@ import './App.css';
 const Protected = ({ children }) => getToken() ? children : <Navigate to="/login" />;
 
 function Nav() {
+  useLocation();            // re-renders Nav on every route change, so the token check stays current
+  const nav = useNavigate();
   if (!getToken()) return null;
-  const logout = () => { localStorage.removeItem('token'); window.location = '/login'; };
+  const logout = () => { localStorage.removeItem('token'); nav('/login'); };
   return (
     <nav>
       <b>SAP Copilot</b>
