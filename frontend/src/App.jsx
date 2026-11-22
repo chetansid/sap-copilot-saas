@@ -10,9 +10,12 @@ import './App.css';
 const Protected = ({ children }) => getToken() ? children : <Navigate to="/login" />;
 
 function Nav() {
-  useLocation();            // re-renders Nav on every route change, so the token check stays current
+  const location = useLocation();
   const nav = useNavigate();
-  if (!getToken()) return null;
+
+  if (!getToken() || ["/login", "/signup"].includes(location.pathname)) {
+    return null;
+  }
   const logout = () => { localStorage.removeItem('token'); nav('/login'); };
   return (
     <nav>
